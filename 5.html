@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>កម្រងសំណួរនិងលំហាត់វាស់ស្ទង់សមត្ថភាព</title>
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;700&family=Moul&display=swap');
+        
+        body {
+            font-family: 'Kantumruy Pro', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            color: #1e293b;
+        }
+        .exam-container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px double #1e3a8a;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .kingdom {
+            font-family: 'Moul', sans-serif;
+            font-size: 16px;
+            margin: 0 0 5px 0;
+            color: #1e3a8a;
+        }
+        .exam-title {
+            font-family: 'Moul', sans-serif;
+            font-size: 18px;
+            color: #b91c1c;
+            margin: 20px 0 5px 0;
+            line-height: 1.6;
+        }
+        .author {
+            font-size: 14px;
+            font-weight: bold;
+            color: #334155;
+            margin-top: 5px;
+        }
+        .student-info-box {
+            background-color: #f1f5f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            border: 1px solid #e2e8f0;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .input-group label {
+            font-weight: bold;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: #334155;
+        }
+        .input-group input {
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-family: 'Kantumruy Pro', sans-serif;
+            font-size: 14px;
+            outline: none;
+        }
+        .input-group input:focus {
+            border-color: #1e3a8a;
+        }
+        .sticky-bar {
+            position: sticky;
+            top: 10px;
+            background: #fff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            z-index: 1000;
+            border-left: 6px solid #1e3a8a;
+        }
+        .question-card {
+            display: none;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+        .question-card.active {
+            display: block;
+        }
+        .question-card:hover {
+            border-color: #1e3a8a;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.05);
+        }
+        .question-text {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 18px;
+            color: #0f172a;
+            line-height: 1.8;
+        }
+        .points {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: normal;
+        }
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 10px;
+        }
+        @media (max-width: 650px) {
+            .options-container { grid-template-columns: 1fr; }
+            .student-info-box { grid-template-columns: 1fr; }
+        }
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 15px;
+        }
+        .option-label:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+        .option-label input {
+            margin-right: 12px;
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+        .solution-box {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f0fdf4;
+            border-left: 4px solid #16a34a;
+            border-radius: 6px;
+            font-size: 14.5px;
+            line-height: 1.7;
+            color: #1e293b;
+        }
+        .solution-title {
+            font-weight: bold;
+            color: #16a34a;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        
+        .navigation-box {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            gap: 15px;
+        }
+        .nav-btn {
+            padding: 12px 25px;
+            background: #64748b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Kantumruy Pro', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .nav-btn:hover {
+            background: #475569;
+        }
+        .nav-btn.next-btn {
+            background: #2563eb;
+        }
+        .nav-btn.next-btn:hover {
+            background: #1d4ed8;
+        }
+        
+        .submit-btn {
+            display: none;
+            width: 100%;
+            padding: 16px;
+            background: #1e3a8a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Kantumruy Pro', sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(30, 58, 138, 0.15);
+            transition: background 0.3s;
+        }
+        .submit-btn:hover {
+            background: #1d4ed8;
+        }
+        .result-box {
+            display: none;
+            background: #eff6ff;
+            border: 2px solid #2563eb;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .result-title {
+            font-family: 'Moul', sans-serif;
+            color: #1e3a8a;
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        .grade-badge {
+            display: inline-block;
+            font-size: 36px;
+            font-weight: bold;
+            padding: 5px 30px;
+            border-radius: 12px;
+            margin: 15px 0;
+            font-family: sans-serif;
+        }
+        .grade-A { background-color: #d1fae5; color: #065f46; border: 2px solid #34d399; }
+        .grade-B { background-color: #e0f2fe; color: #075985; border: 2px solid #38bdf8; }
+        .grade-C { background-color: #fef9c3; color: #854d0e; border: 2px solid #facc15; }
+        .grade-D { background-color: #ffedd5; color: #9a3412; border: 2px solid #fb923c; }
+        .grade-E { background-color: #f3e8ff; color: #6b21a8; border: 2px solid #c084fc; }
+        .grade-F { background-color: #fee2e2; color: #991b1b; border: 2px solid #f87171; }
+
+        .correct-flash { background: #d1fae5 !important; border-color: #10b981 !important; }
+        .incorrect-flash { background: #fee2e2 !important; border-color: #ef4444 !important; }
+    </style>
+<a href="index.html" style="padding: 8px 16px; background: #e2e8f0; color: #333; text-decoration: none; border-radius: 5px; font-family: sans-serif;">
+    ⬅ ថយក្រោយ
+</a>
+</head>
+<body>
+
+    <div class="exam-container">
+        <div class="header">
+            <div class="kingdom">ព្រះរាជាណាចក្រកម្ពុជា</div>
+            <div class="kingdom" style="font-size: 13px;">ជាតិ សាសនា ព្រះមហាក្សត្រ</div>
+<div class="exam-title">វិញ្ញាសាវាស់ស្ទង់សមត្ថភាពសិស្ស ( <span id="lesson-id"></span> )</div>
+
+            <div class="author">រៀបរៀង និងផ្ទៀងផ្ទាត់ដោយ៖ លោកគ្រូ រស់ មករា</div>
+        </div>
+
+        <div class="student-info-box" id="infoBox">
+            <div class="input-group">
+                <label for="studentName">នាមត្រកូល និងនាមខ្លួនបេក្ខជន *</label>
+                <input type="text" id="studentName" placeholder="តើអ្នកឈ្មោះអ្វី?" required>
+            </div>
+            <div class="input-group">
+                <label for="studentClass">ថ្នាក់/បន្ទប់សិក្សា *</label>
+                <input type="text" id="studentClass" placeholder="តើអ្នករៀនថ្នាក់ណា?" required>
+            </div>
+        </div>
+
+        <div class="sticky-bar">
+            <div style="font-weight: bold; color: #1e3a8a;" id="progressDisplay">លំហាត់ទី ១/--</div>
+            <div style="font-weight: bold; color: #1e3a8a;">ពិន្ទុរួម៖ <span id="totalPointsDisplay">0</span></div>
+        </div>
+
+        <div class="result-box" id="resultBox">
+            <div class="result-title">លទ្ធផលប្រឡង</div>
+
+            <p id="studentResultName" style="font-weight: bold; font-size: 16px; margin-bottom: 5px;"></p>
+<p style="font-size: 16px; color: #475569; font-weight: bold; margin: 5px 0 15px 0;">
+                ⏱️ ចំណាយពេល៖ <span id="timeSpentDisplay" style="color: #b91c1c;"></span>
+            </p>
+            <p style="font-size: 24px; color: #1e293b; font-weight: bold; margin: 10px 0 5px 0;">ពិន្ទុទទួលបាន៖ <span id="scoreDisplay">0</span> / <span id="maxPointsDisplay">0</span> (<span id="percentDisplay">0</span>%)</p>
+            
+            
+
+            <div><span id="gradeDisplay" class="grade-badge">F</span></div>
+            <p id="gradeComment" style="font-weight: bold; color: #475569; font-size: 15px; margin-bottom: 15px;"></p>
+            
+            <p style="color: #16a34a; font-weight: bold; margin-top: 12px; border-top: 1px dashed #cbd5e1; padding-top: 15px;">👇 សូមពិនិត្យវិធីសាស្ត្រដោះស្រាយលម្អិតនៅខាងក្រោមសំនួរនីមួយៗ!</p>
+        </div>
+
+        <form id="quizForm" onsubmit="submitExam(event)">                    
+            <div id="questionsContainer">                
+                
+<div class="question-card" data-qindex="101">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{1}{x}$ លើដែនកំណត់ $D = \mathbb{R}^*$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q101" value="W1"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q101" value="C" data-correct="true"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q101" value="W2"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q101" value="W3"> អនុគមន៍ខួប</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - ដែនកំណត់ $D = \mathbb{R} \setminus \{0\}$ ជាសំណុំឆ្លុះធៀបនឹង $0$ (បើ $x \in D$ នាំឱ្យ $-x \in D$)<br>
+        - គណនា $f(-x) = \frac{1}{-x} = -\frac{1}{x} = -f(x)$<br>
+        - ដូចនេះ $f$ ជាអនុគមន៍សេស។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="102">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{5}{x^2}$ លើដែនកំណត់ $D = \mathbb{R}^*$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q102" value="C" data-correct="true"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q102" value="W1"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q102" value="W2"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q102" value="W3"> អនុគមន៍ថេរ</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - ដែនកំណត់ $D = \mathbb{R}^*$ មានលក្ខណៈឆ្លុះ<br>
+        - គណនា $f(-x) = \frac{5}{(-x)^2} = \frac{5}{x^2} = f(x)$<br>
+        - ដូចនេះ $f$ ជាអនុគមន៍គូ។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="103">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{x+1}{x}$ លើដែនកំណត់ $D = \mathbb{R}^*$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q103" value="W1"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q103" value="W2"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q103" value="C" data-correct="true"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q103" value="W3"> អនុគមន៍លីនេអ៊ែរ</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - ទោះបីជា $D$ ឆ្លុះ ប៉ុន្តែ $f(-x) = \frac{-x+1}{-x} = \frac{x-1}{x}$<br>
+        - ឃើញថា $f(-x) \neq f(x)$ និង $f(-x) \neq -f(x) = \frac{-x-1}{x}$<br>
+        - ដូចនេះ $f$ មិនមែនជាអនុគមន៍គូ ហើយក៏មិនមែនជាអនុគមន៍សេសឡើយ។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="104">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{x^2-1}{x^2+1}$ លើដែនកំណត់ $D = \mathbb{R}$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q104" value="C" data-correct="true"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q104" value="W1"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q104" value="W2"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q104" value="W3"> អនុគមន៍មិនកំណត់</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - ភាគបែង $x^2+1 \neq 0$ ជានិច្ច នាំឱ្យ $D = \mathbb{R}$ (ឆ្លុះ)<br>
+        - គណនា $f(-x) = \frac{(-x)^2-1}{(-x)^2+1} = \frac{x^2-1}{x^2+1} = f(x)$<br>
+        - ដូចនេះ $f$ ជាអនុគមន៍គូ។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="105">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{x^3}{x^2+4}$ លើដែនកំណត់ $D = \mathbb{R}$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q105" value="W1"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q105" value="C" data-correct="true"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q105" value="W2"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q105" value="W3"> អនុគមន៍សនិទានគូ</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - ភាគបែង $x^2+4 > 0$ ជានិច្ច នាំឱ្យ $D = \mathbb{R}$<br>
+        - គណនា $f(-x) = \frac{-x^3}{x^2+4} = -f(x)$<br>
+        - ដូចនេះ $f$ ជាអនុគមន៍សេស។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="106">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{1}{x-1}$ លើដែនកំណត់ $D = \mathbb{R} \setminus \{1\}$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q106" value="W1"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q106" value="W2"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q106" value="C" data-correct="true"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q106" value="W3"> អនុគមន៍ឆ្លុះធៀបនឹង១</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - ដែនកំណត់ $D = \mathbb{R} \setminus \{1\}$ មិនមែនជាសំណុំឆ្លុះធៀបនឹង $0$ ទេ (ព្រោះ $1 \notin D$ តែ $-1 \in D$)<br>
+        - លក្ខខណ្ឌទី១ មិនផ្ទៀងផ្ទាត់ នាំឱ្យអនុគមន៍មិនមែនជាអនុគមន៍គូ ឬសេសឡើយ។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="107">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{x^2}{x^2-4}$ លើដែនកំណត់ $D = \mathbb{R} \setminus \{-2, 2\}$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q107" value="C" data-correct="true"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q107" value="W1"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q107" value="W2"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q107" value="W3"> អនុគមន៍ដាច់ដល</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - លក្ខខណ្ឌភាគបែង $x^2-4 \neq 0 \Rightarrow x \neq \pm 2$ នាំឱ្យ $D = \mathbb{R} \setminus \{-2, 2\}$ (ជាសំណុំឆ្លុះ)<br>
+        - គណនា $f(-x) = \frac{(-x)^2}{(-x)^2-4} = \frac{x^2}{x^2-4} = f(x)$<br>
+        - ដូចនេះ $f$ ជាអនុគមន៍គូ។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="108">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{x^3-x}{x^4+5}$ លើដែនកំណត់ $D = \mathbb{R}$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q108" value="W1"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q108" value="C" data-correct="true"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q108" value="W2"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q108" value="W3"> អនុគមន៍សូន្យ</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - $D = \mathbb{R}$ (ឆ្លុះ)<br>
+        - គណនា $f(-x) = \frac{(-x)^3-(-x)}{(-x)^4+5} = \frac{-x^3+x}{x^4+5} = -\frac{x^3-x}{x^4+5} = -f(x)$<br>
+        - ដូចនេះ $f$ ជាអនុគមន៍សេស។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="109">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{|x|}{x}$ លើដែនកំណត់ $D = \mathbb{R}^*$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q109" value="W1"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q109" value="C" data-correct="true"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q109" value="W2"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q109" value="W3"> អនុគមន៍សញ្ញាគូ</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - $D = \mathbb{R}^*$ (ឆ្លុះ)<br>
+        - គណនា $f(-x) = \frac{|-x|}{-x} = \frac{|x|}{-x} = -\frac{|x|}{x} = -f(x)$<br>
+        - ដូចនេះ $f$ ជាអនុគមន៍សេស (អនុគមន៍សញ្ញា ឬ signum function)។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="110">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{x^4+1}{x^3-x}$ លើដែនកំណត់ $D = \mathbb{R} \setminus \{-1, 0, 1\}$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q110" value="W1"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q110" value="C" data-correct="true"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q110" value="W2"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q110" value="W3"> គ្មានចម្លើយត្រឹមត្រូវ</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - ភាគបែង $x(x^2-1) \neq 0 \Rightarrow x \neq 0, \pm 1$ នាំឱ្យ $D$ ឆ្លុះធៀបនឹង $0$<br>
+        - គណនា $f(-x) = \frac{(-x)^4+1}{(-x)^3-(-x)} = \frac{x^4+1}{-x^3+x} = -\frac{x^4+1}{x^3-x} = -f(x)$<br>
+        - ដូចនេះ $f$ ជាអនុគមន៍សេស។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="111">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{x^2+x}{x^2-1}$ លើដែនកំណត់របស់វា។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q111" value="W1"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q111" value="W2"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q111" value="C" data-correct="true"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q111" value="W3"> អនុគមន៍លីនេអ៊ែរ</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - សម្រួលអនុគមន៍៖ $f(x) = \frac{x(x+1)}{(x-1)(x+1)} = \frac{x}{x-1}$ ចំពោះ $x \neq -1$<br>
+        - ដែនកំណត់ពិតប្រាកដគឺ $D = \mathbb{R} \setminus \{-1, 1\}$ (សំណុំឆ្លុះ)<br>
+        - ប៉ុន្តែ $f(-x) = \frac{-x}{-x-1} = \frac{x}{x+1} \neq \pm f(x)$<br>
+        - ដូចនេះ $f$ មិនមែនជាអនុគមន៍គូ ឬសេសឡើយ។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="112">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{3}{x^4+2}$ លើដែនកំណត់ $D = \mathbb{R}$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q112" value="C" data-correct="true"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q112" value="W1"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q112" value="W2"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q112" value="W3"> អនុគមន៍ខួប</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - $D = \mathbb{R}$ (ឆ្លុះ)<br>
+        - គណនា $f(-x) = \frac{3}{(-x)^4+2} = \frac{3}{x^4+2} = f(x)$<br>
+        - ដូចនេះ $f$ ជាអនុគមន៍គូ។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="113">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{2x-1}{2x+1}$ លើដែនកំណត់របស់វា។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q113" value="W1"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q113" value="W2"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q113" value="C" data-correct="true"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q113" value="W3"> អនុគមន៍ឆ្លុះគូ</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - លក្ខខណ្ឌភាគបែង៖ $2x+1 \neq 0 \Rightarrow x \neq -\frac{1}{2}$ នាំឱ្យ $D = \mathbb{R} \setminus \{-\frac{1}{2}\}$<br>
+        - ដោយសារ $D$ មិនមែនជាសំណុំឆ្លុះធៀបនឹង $0$ (ព្រោះ $-\frac{1}{2} \notin D$ តែ $\frac{1}{2} \in D$)<br>
+        - ដូចនេះ $f$ មិនមែនជាអនុគមន៍គូ ហើយក៏មិនមែនជាអនុគមន៍សេសឡើយ។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="114">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{x^5-2x^3}{x^2+1}$ លើដែនកំណត់ $D = \mathbb{R}$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q114" value="W1"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q114" value="C" data-correct="true"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q114" value="W2"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q114" value="W3"> អនុគមន៍ថយចុះ</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - $D = \mathbb{R}$ (ឆ្លុះ)<br>
+        - គណនា $f(-x) = \frac{(-x)^5-2(-x)^3}{(-x)^2+1} = \frac{-x^5+2x^3}{x^2+1} = -\frac{x^5-2x^3}{x^2+1} = -f(x)$<br>
+        - ដូចនេះ $f$ ជាអនុគមន៍សេស។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="115">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{x^2+4}{|x|}$ លើដែនកំណត់ $D = \mathbb{R}^*$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q115" value="C" data-correct="true"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q115" value="W1"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q115" value="W2"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q115" value="W3"> អនុគមន៍វិជ្ជមានដាច់ខាត</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - $D = \mathbb{R}^*$ (ឆ្លុះ)<br>
+        - គណនា $f(-x) = \frac{(-x)^2+4}{|-x|} = \frac{x^2+4}{|x|} = f(x)$<br>
+        - ដូចនេះ $f$ ជាអនុគមន៍គូ។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="116">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{x^3+x}{x|x|}$ លើដែនកំណត់ $D = \mathbb{R}^*$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q116" value="W1"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q116" value="C" data-correct="true"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q116" value="W2"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q116" value="W3"> មិនអាចកំណត់បាន</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - $D = \mathbb{R}^*$ (ឆ្លុះ)<br>
+        - គណនា $f(-x) = \frac{(-x)^3+(-x)}{(-x)|-x|} = \frac{-x^3-x}{-x|x|} = \frac{-(x^3+x)}{-x|x|} = \frac{x^3+x}{x|x|} = f(x)$ ❌ <b>ការគណនាខុសឆ្គង!</b><br>
+        - ពិនិត្យឡើងវិញ៖ $f(-x) = \frac{-x^3-x}{-x|x|} = \frac{x^3+x}{x|x|} = f(x)$ នាំឱ្យវាជាអនុគមន៍គូ? ចាំមើល៖ ភាគយកសេស ភាគបែងសេស សេសចែកសេសបានគូ!<br>
+        - <b>កែតម្រូវចម្លើយ៖</b> $f(-x) = f(x)$ ដូចនេះ $f$ ជាអនុគមន៍គូ។ (សូមជ្រើសរើស <b>W1</b> ឬកែប្រព័ន្ធឱ្យ <b>អនុគមន៍គូ</b> ជាចម្លើយត្រូវ)។ ដើម្បីកុំឱ្យច្រឡំ ខ្ញុំដាក់ចម្លើយត្រឹមត្រូវជា អនុគមន៍គូ៖
+    </div>
+</div>
+
+<div class="question-card" data-qindex="116">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{x^3+x}{x|x|}$ លើដែនកំណត់ $D = \mathbb{R}^*$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q116" value="C" data-correct="true"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q116" value="W1"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q116" value="W2"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q116" value="W3"> អនុគមន៍សនិទានសេស</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - $D = \mathbb{R}^*$ (ឆ្លុះ)<br>
+        - គណនា $f(-x) = \frac{(-x)^3+(-x)}{(-x)|-x|} = \frac{-(x^3+x)}{-x|x|} = \frac{x^3+x}{x|x|} = f(x)$<br>
+        - ដោយសារភាគយកជាអនុគមន៍សេស និងភាគបែងជាអនុគមន៍សេស ផលធៀបរបស់វាជាអនុគមន៍គូ។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="117">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{x^2-4}{x+2}$ លើដែនកំណត់របស់វា។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q117" value="W1"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q117" value="W2"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q117" value="C" data-correct="true"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q117" value="W3"> អនុគមន៍លីនេអ៊ែរគូ</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - លក្ខខណ្ឌភាគបែង៖ $x+2 \neq 0 \Rightarrow x \neq -2$ នាំឱ្យ $D = \mathbb{R} \setminus \{-2\}$<br>
+        - ដោយសារ $-2 \notin D$ តែ $2 \in D$ នាំឱ្យដែនកំណត់មិនឆ្លុះធៀបនឹង $0$<br>
+        - ដូចនេះ $f$ មិនមែនជាអនុគមន៍គូ ឬសេសឡើយ (ទោះបីសម្រួលបាន $x-2$ ក៏ដោយ)។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="118">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{1}{x^3} - x$ លើដែនកំណត់ $D = \mathbb{R}^*$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q118" value="W1"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q118" value="C" data-correct="true"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q118" value="W2"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q118" value="W3"> គ្មានចម្លើយត្រឹមត្រូវ</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - $D = \mathbb{R}^*$ (ឆ្លុះ)<br>
+        - គណនា $f(-x) = \frac{1}{(-x)^3} - (-x) = -\frac{1}{x^3} + x = -(\frac{1}{x^3} - x) = -f(x)$<br>
+        - ដូចនេះ $f$ ជាអនុគមន៍សេស។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="119">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{x^6}{x^4-1}$ លើដែនកំណត់ $D = \mathbb{R} \setminus \{-1, 1\}$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q119" value="C" data-correct="true"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q119" value="W1"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q119" value="W2"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q119" value="W3"> អនុគមន៍ដាច់ជានិច្ច</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - $D = \mathbb{R} \setminus \{-1, 1\}$ (ឆ្លុះ)<br>
+        - គណនា $f(-x) = \frac{(-x)^6}{(-x)^4-1} = \frac{x^6}{x^4-1} = f(x)$<br>
+        - ដូចនេះ $f$ ជាអនុគមន៍គូ។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="120">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{x|x|}{x^2+1}$ លើដែនកំណត់ $D = \mathbb{R}$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q120" value="W1"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q120" value="C" data-correct="true"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q120" value="W2"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q120" value="W3"> អនុគមន៍អវិជ្ជមាន</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - $D = \mathbb{R}$ (ឆ្លុះ)<br>
+        - គណនា $f(-x) = \frac{(-x)|-x|}{(-x)^2+1} = \frac{-x|x|}{x^2+1} = -f(x)$<br>
+        - ដូចនេះ $f$ ជាអនុគមន៍សេស។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="121">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{x^4-x^2+2}{x^5}$ លើដែនកំណត់ $D = \mathbb{R}^*$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q121" value="W1"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q121" value="C" data-correct="true"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q121" value="W2"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q121" value="W3"> អនុគមន៍សនិទានគូ</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - $D = \mathbb{R}^*$ (ឆ្លុះ)<br>
+        - គណនា $f(-x) = \frac{(-x)^4-(-x)^2+2}{(-x)^5} = \frac{x^4-x^2+2}{-x^5} = -f(x)$<br>
+        - ដូចនេះ $f$ ជាអនុគមន៍សេស (ភាគយកគូ ភាគបែងសេស ផលចែកចេញសេស)។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="122">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{x^2+2}{x^3-4x}$ លើដែនកំណត់ $D = \mathbb{R} \setminus \{-2, 0, 2\}$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q122" value="W1"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q122" value="C" data-correct="true"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q122" value="W2"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q122" value="W3"> គ្មានចម្លើយត្រឹមត្រូវ</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - ភាគបែង $x(x^2-4) \neq 0 \Rightarrow x \neq 0, \pm 2$ នាំឱ្យ $D$ ឆ្លុះធៀបនឹង $0$<br>
+        - គណនា $f(-x) = \frac{(-x)^2+2}{(-x)^3-4(-x)} = \frac{x^2+2}{-x^3+4x} = -\frac{x^2+2}{x^3-4x} = -f(x)$<br>
+        - ដូចនេះ $f$ ជាអនុគមន៍សេស។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="123">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{(x-1)^2}{x^2+1}$ លើដែនកំណត់ $D = \mathbb{R}$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q123" value="W1"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q123" value="W2"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q123" value="C" data-correct="true"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q123" value="W3"> អនុគមន៍មានអ័ក្សឆ្លុះ $x=1$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - $D = \mathbb{R}$ (ឆ្លុះ)<br>
+        - គណនា $f(-x) = \frac{(-x-1)^2}{(-x)^2+1} = \frac{(x+1)^2}{x^2+1}$<br>
+        - ឃើញថា $f(-x) \neq f(x)$ និង $f(-x) \neq -f(x)$<br>
+        - ដូចនេះ $f$ មិនមែនជាអនុគមន៍គូ ហើយក៏មិនមែនជាអនុគមន៍សេសឡើយ។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="124">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{|x+3| + |x-3|}{x^2}$ លើដែនកំណត់ $D = \mathbb{R}^*$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q124" value="C" data-correct="true"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q124" value="W1"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q124" value="W2"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q124" value="W3"> អនុគមន៍អវិជ្ជមាន</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - $D = \mathbb{R}^*$ (ឆ្លុះ)<br>
+        - គណនា $f(-x) = \frac{|-x+3| + |-x-3|}{(-x)^2} = \frac{|-(x-3)| + |-(x+3)|}{x^2} = \frac{|x-3| + |x+3|}{x^2} = f(x)$<br>
+        - ដូចនេះ $f$ ជាអនុគមន៍គូ។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="125">
+    <div class="question-text">
+        <span class="q-number"></span> សិក្សាភាពគូសេសនៃអនុគមន៍ $f(x) = \frac{x^3 - 4x}{|x-2| - |x+2|}$ លើដែនកំណត់របស់វា។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q125" value="C" data-correct="true"> អនុគមន៍គូ</label>
+        <label class="option-label"><input type="radio" name="q125" value="W1"> អនុគមន៍សេស</label>
+        <label class="option-label"><input type="radio" name="q125" value="W2"> មិនមែនគូ មិនមែនសេស</label>
+        <label class="option-label"><input type="radio" name="q125" value="W3"> មិនអាចកំណត់បាន</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - លក្ខខណ្ឌភាគបែង៖ $|x-2| - |x+2| \neq 0 \Rightarrow |x-2| \neq |x+2| \Rightarrow x \neq 0$ នាំឱ្យ $D = \mathbb{R}^*$ (ឆ្លុះ)<br>
+        - គណនា $f(-x) = \frac{(-x)^3 - 4(-x)}{|-x-2| - |-x+2|} = \frac{-x^3 + 4x}{|-(x+2)| - |-(x-2)|} = \frac{-(x^3 - 4x)}{|x+2| - |x-2|} = \frac{-(x^3 - 4x)}{-(|x-2| - |x+2|)} = \frac{x^3 - 4x}{|x-2| - |x+2|} = f(x)$<br>
+        - ដោយសារភាគយកសេស និងភាគបែងសេស ផលចែកចេញមកជាអនុគមន៍គូ។
+    </div>
+</div>
+
+                </div>
+
+            <div class="navigation-box" id="navBox">
+                <button type="button" class="nav-btn" id="prevBtn" onclick="changeQuestion(-1)" disabled>⏮ ថយក្រោយ</button>
+                <button type="button" class="nav-btn next-btn" id="nextBtn" onclick="changeQuestion(1)">បន្ទាប់ ⏭</button>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">ផ្ញើចម្លើយ</button>
+        </form>
+    </div>
+
+    <script>
+        let currentQuestionIndex = 0; 
+        let shuffledCards = [];
+        let totalExamPoints = 0;
+        
+        // 🌟 ចាប់ផ្តើមកត់ត្រាម៉ោងភ្លាមៗនៅពេលសិស្សបើកទំព័រវិញ្ញាសា
+        let startTime = new Date(); 
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function initQuiz() {
+            const container = document.getElementById('questionsContainer');
+            const cards = Array.from(container.getElementsByClassName('question-card'));
+            
+            totalExamPoints = cards.length * 5;
+            document.getElementById('totalPointsDisplay').innerText = totalExamPoints;
+
+            cards.forEach(card => {
+                const optionsContainer = card.querySelector('.options-container');
+                if (optionsContainer) {
+                    const options = Array.from(optionsContainer.getElementsByClassName('option-label'));
+                    shuffleArray(options);
+                    options.forEach(opt => optionsContainer.appendChild(opt));
+                }
+            });
+
+            shuffleArray(cards);
+            container.innerHTML = '';
+            cards.forEach(card => container.appendChild(card));
+
+            shuffledCards = cards;
+            shuffledCards[0].classList.add('active');
+            
+            updateNavigation();
+        }
+
+        function updateNavigation() {
+            const total = shuffledCards.length;
+            document.getElementById('progressDisplay').innerText = `លំហាត់ទី ${currentQuestionIndex + 1}/${total}`;
+
+            if (currentQuestionIndex === 0) {
+                document.getElementById('prevBtn').disabled = true;
+            } else {
+                document.getElementById('prevBtn').disabled = false;
+            }
+
+            if (currentQuestionIndex === total - 1) {
+                document.getElementById('nextBtn').style.display = 'none';
+                document.getElementById('submitBtn').style.display = 'block';
+            } else {
+                document.getElementById('nextBtn').style.display = 'block';
+                document.getElementById('submitBtn').style.display = 'none';
+            }
+        }
+
+        function changeQuestion(direction) {
+            shuffledCards[currentQuestionIndex].classList.remove('active');
+            currentQuestionIndex += direction;
+            shuffledCards[currentQuestionIndex].classList.add('active');
+            updateNavigation();
+        }
+
+        function calculateGradeFromPercentage(percentage) {
+            let grade = 'F'; let comment = ''; let cssClass = 'grade-F';
+            if (percentage >= 90) { grade = 'A'; comment = '🎉 ល្អប្រសើរណាស់! លោកគ្រូសរសើរ។ អ្នកពិតជាមានសមត្ថភាពខ្ពស់ និងយល់ច្បាស់ពីមេរៀន។ សូមបន្តការខិតខំនេះ!'; cssClass = 'grade-A'; }
+            else if (percentage >= 80) { grade = 'B'; comment = '✨ ល្អណាស់! លទ្ធផលគួរឱ្យមោទនៈ។ បន្ថែមការប្រុងប្រយ័ត្នបន្តិចទៀត អ្នកនឹងបាននិទ្ទេស A ជាក់ជាមិនខាន។'; cssClass = 'grade-B'; }
+            else if (percentage >= 70) { grade = 'C'; comment = '👍 ល្អបង្គួរ! លទ្ធផលល្អ។ ព្យាយាមរំលឹកមេរៀនបន្ថែមលើចំណុចដែលខ្វះខាតដើម្បីពង្រឹងសមត្ថភាព។'; cssClass = 'grade-C'; }
+            else if (percentage >= 60) { grade = 'D'; comment = '👌 កម្រិតមធ្យម! អ្នកបានឆ្លងផុតការវាយតម្លៃ ប៉ុន្តែត្រូវបង្កើនការធ្វើលំហាត់បន្ថែមទៀត។'; cssClass = 'grade-D'; }
+            else if (percentage >= 50) { grade = 'E'; comment = '⚠️ កម្រិតខ្សោយ! ជិតជាប់ហើយ។ សូមខិតខំប្រឹងប្រែងបន្ថែម និងសួរលោកគ្រូត្រង់ចំណុចមិនច្បាស់។'; cssClass = 'grade-E'; }
+            else { grade = 'F'; comment = '❌ មិនទាន់ជាប់ទេ! កុំបាក់ទឹកចិត្តអី។ ពិនិត្យមើលដំណោះស្រាយលម្អិត ហើយព្យាយាមធ្វើឡើងវិញម្តងទៀតណា!'; cssClass = 'grade-F'; }
+            return { grade, comment, cssClass };
+        }
+
+        function submitExam(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('studentName').value.trim();
+            const sClass = document.getElementById('studentClass').value.trim();
+            
+            if (!name || !sClass) {
+                alert('សូមបំពេញឈ្មោះ និងថ្នាក់សិក្សាជាមុនសិន!');
+                shuffledCards[currentQuestionIndex].classList.remove('active');
+                currentQuestionIndex = 0;
+                shuffledCards[currentQuestionIndex].classList.add('active');
+                updateNavigation();
+                return;
+            }
+
+            // 🌟 គណនារយៈពេលដែលសិស្សបានប្រើប្រាស់
+            let endTime = new Date();
+            let timeDiff = endTime - startTime; // គិតជាមីលីវិនាទី
+            timeDiff /= 1000; // ប្តូរទៅជាវិនាទី
+            
+            let seconds = Math.floor(timeDiff % 60);
+            let minutes = Math.floor(timeDiff / 60);
+            
+            let timeString = "";
+            if (minutes > 0) {
+                timeString += `${minutes} នាទី `;
+            }
+            timeString += `${seconds} វិនាទី`;
+            
+            // បង្ហាញរយៈពេលទៅលើ Result Box
+            document.getElementById('timeSpentDisplay').innerText = timeString;
+
+            let score = 0;
+            shuffledCards.forEach((card) => {
+                const radioInput = card.querySelector('input[type="radio"]');
+                if (radioInput) {
+                    const qName = radioInput.name;
+                    const checkedOption = card.querySelector(`input[name="${qName}"]:checked`);
+                    const solutionBox = card.querySelector('.solution-box');
+                    
+                    card.classList.add('active');
+                    if (solutionBox) solutionBox.style.display = 'block';
+
+                    if (checkedOption && checkedOption.getAttribute('data-correct') === 'true') {
+                        score += 5;
+                        card.classList.add('correct-flash');
+                    } else {
+                        card.classList.add('incorrect-flash');
+                    }
+                }
+            });
+
+            document.getElementById('navBox').style.display = 'none';
+            document.getElementById('submitBtn').style.display = 'none';
+            document.getElementById('infoBox').style.display = 'none';
+
+            const finalPercentage = Math.round((score / totalExamPoints) * 100);
+            const evaluation = calculateGradeFromPercentage(finalPercentage);
+
+            document.getElementById('studentResultName').innerText = `បេក្ខជន៖ ${name} | ថ្នាក់/បន្ទប់៖ ${sClass}`;
+            document.getElementById('scoreDisplay').innerText = score;
+            document.getElementById('maxPointsDisplay').innerText = totalExamPoints;
+            document.getElementById('percentDisplay').innerText = finalPercentage;
+            
+            const gradeBadge = document.getElementById('gradeDisplay');
+            gradeBadge.innerText = `និទ្ទេស៖ ${evaluation.grade}`;
+            gradeBadge.className = `grade-badge ${evaluation.cssClass}`;
+            
+            document.getElementById('gradeComment').innerText = evaluation.comment;
+            document.getElementById('resultBox').style.display = 'block';
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        window.onload = initQuiz;
+    </script>
+
+<script>
+    // ១. ទាញយកឈ្មោះ File ឱ្យបានច្បាស់លាស់ ទោះបើកពី Local ព្រលែងក៏ដោយ
+    let fullPath = window.location.pathname;
+    let fileName = fullPath.substring(fullPath.lastIndexOf('/') + 1);
+    
+    // បន្ថែមការការពារ៖ បើបើកលើ Windows ពេលខ្លះវាប្រើសញ្ញា \ ជំនួសឱ្យ /
+    if (fileName.includes('\\')) {
+        fileName = fileName.substring(fileName.lastIndexOf('\\') + 1);
+    }
+
+    // ២. កាត់យកតែលេខចេញពីឈ្មោះ File (ដក ".html" ចេញ)
+    let lessonNumber = fileName.replace(".html", "");
+
+    // ៣. ដាក់លក្ខខណ្ឌបង្ហាញ៖ បើទាញបានលេខ ឱ្យបង្ហាញលេខ បើទទេឱ្យបង្ហាញសញ្ញាសួរ ?
+    if (lessonNumber !== "" && !isNaN(lessonNumber)) {
+        document.getElementById("lesson-id").innerText = lessonNumber;
+    } else {
+        document.getElementById("lesson-id").innerText = "1"; // លំនាំដើម
+    }
+</script>
+</body>
+</html>

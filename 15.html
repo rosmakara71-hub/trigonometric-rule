@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>មេរៀន និងលំហាត់៖ ភាពគូសេសនៃអនុគមន៍</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=FreeMono&display=swap');
+
+        :root {
+            --primary-color: #1a365d;
+            --accent-color: #3182ce;
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #2d3748;
+        }
+
+        body {
+            font-family: 'Kantumruy Pro', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .main-header {
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 24px;
+            font-weight: 700;
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+        }
+
+        .theory-section {
+            background: #ebf8ff;
+            border-left: 5px solid var(--accent-color);
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #cbd5e0;
+            padding-bottom: 5px;
+        }
+
+        .quiz-card {
+            background: var(--card-bg);
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .math-style {
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+            font-size: 19px;
+            color: #0d1b2a;
+            padding: 0 3px;
+        }
+
+        .math-symbol {
+            font-style: normal;
+            font-family: sans-serif;
+            padding: 0 6px;
+            color: #1a365d;
+            font-weight: bold;
+        }
+
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            vertical-align: middle;
+            text-align: center;
+            padding: 0 6px;
+            font-size: 16px;
+            line-height: 1.1;
+        }
+        .fraction .num {
+            border-bottom: 1.5px solid #000;
+            padding-bottom: 4px;
+            font-weight: 500;
+        }
+        .fraction .den {
+            padding-top: 4px;
+            font-weight: 500;
+        }
+
+        .sqrt {
+            display: inline-flex;
+            vertical-align: middle;
+            align-items: flex-end;
+        }
+        .sqrt-sym {
+            font-size: 22px;
+            font-family: sans-serif;
+            font-style: normal;
+            line-height: 1;
+            margin-right: -2px;
+        }
+        .sqrt-vin {
+            border-top: 1.5px solid #000;
+            padding-top: 2px;
+            line-height: 1;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option-item {
+            background: #f7fafc;
+            border: 1px solid #edf2f7;
+            padding: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+
+        .option-item:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+        }
+
+        .option-item input {
+            margin-right: 12px;
+            transform: scale(1.2);
+            accent-color: var(--accent-color);
+        }
+
+        .action-btn {
+            background-color: #4a5568;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Kantumruy Pro', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .action-btn:hover {
+            background-color: #2d3748;
+        }
+
+        .solution-panel {
+            display: none;
+            background-color: #f7fafc;
+            border-top: 2px dashed #cbd5e0;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+
+        .badge {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .bg-easy { background: #c6f6d5; color: #22543d; }
+        .bg-medium { background: #feebc8; color: #744210; }
+        .bg-hard { background: #fed7d7; color: #742a2a; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="main-header">📖 មេរៀនសង្ខេប និងធនាគារលំហាត់៖ ភាពគូសេសនៃអនុគមន៍</div>
+
+    <div class="theory-section">
+        <strong>💡 សេចក្ដីសង្ខេបទ្រឹស្ដីគ្រឹះ៖</strong>
+        <p>អនុគមន៍ <span class="math-style">f</span> ដែលមានដែនកំណត់ <span class="math-style">D</span> ជាសំណុំឆ្លុះធៀបនឹងគល់ <span class="math-style">0</span> (កាលណា <span class="math-style">x ∈ D</span> នាំឱ្យ <span class="math-style">-x ∈ D</span>)៖</p>
+        <ul>
+            <li>ជា <strong>អនុគមន៍គូ (Even Function)</strong> កាលណា <span class="math-style">f(-x) = f(x)</span>។ ក្រាបឆ្លុះធៀបនឹងអ័ក្ស <span class="math-style">(Oy)</span>។</li>
+            <li>ជា <strong>អនុគមន៍សេស (Odd Function)</strong> កាលណា <span class="math-style">f(-x) = -f(x)</span>។ ក្រាបឆ្លុះធៀបនឹងគល់ <span class="math-style">O(0,0)</span>។</li>
+        </ul>
+    </div>
+
+
+    <div class="section-title">១. កម្រិតមូលដ្ឋាន (Concept & Polynomials) <span class="badge bg-easy">កម្រិត ១</span></div>
+
+    <div class="quiz-card">
+        <div class="question-text">
+            លំហាត់ ១.១៖ សិក្សាភាពគូសេសនៃអនុគមន៍ <span class="math-style">f(x) = 2x<sup>4</sup> - 5x<sup>2</sup> + 1</span> លើ <span class="math-style">D = ℝ</span>។
+        </div>
+        <div class="options-grid">
+            <label class="option-item"><input type="radio" name="q1_1"> អនុគមន៍គូ</label>
+            <label class="option-item"><input type="radio" name="q1_1"> អនុគមន៍សេស</label>
+            <label class="option-item"><input type="radio" name="q1_1"> មិនមែនគូ មិនមែនសេស</label>
+        </div>
+        <button class="action-btn" onclick="toggleSolutionBox(this)">បង្ហាញដំណោះស្រាយ</button>
+        <div class="solution-panel">
+            <strong>📝 ដំណោះស្រាយលម្អិត៖</strong><br>
+            - ដែនកំណត់ <span class="math-style">D = ℝ</span> (ឆ្លុះ)<br>
+            - គណនា៖ <span class="math-style">f(-x) = 2(-x)<sup>4</sup> - 5(-x)<sup>2</sup> + 1 = 2x<sup>4</sup> - 5x<sup>2</sup> + 1 = f(x)</span><br>
+            👉 ដូចនេះ <span class="math-style">f</span> ជា <strong>អនុគមន៍គូ</strong>។
+        </div>
+    </div>
+
+    <div class="quiz-card">
+        <div class="question-text">
+            លំហាត់ ១.២៖ សិក្សាភាពគូសេសនៃអនុគមន៍ <span class="math-style">f(x) = x<sup>3</sup> - 4x</span> លើ <span class="math-style">D = ℝ</span>។
+        </div>
+        <div class="options-grid">
+            <label class="option-item"><input type="radio" name="q1_2"> អនុគមន៍គូ</label>
+            <label class="option-item"><input type="radio" name="q1_2"> អនុគមន៍សេស</label>
+            <label class="option-item"><input type="radio" name="q1_2"> មិនមែនគូ មិនមែនសេស</label>
+        </div>
+        <button class="action-btn" onclick="toggleSolutionBox(this)">បង្ហាញដំណោះស្រាយ</button>
+        <div class="solution-panel">
+            <strong>📝 ដំណោះស្រាយលម្អិត៖</strong><br>
+            - ដែនកំណត់ <span class="math-style">D = ℝ</span> (ឆ្លុះ)<br>
+            - គណនា៖ <span class="math-style">f(-x) = (-x)<sup>3</sup> - 4(-x) = -x<sup>3</sup> + 4x = -(x<sup>3</sup> - 4x) = -f(x)</span><br>
+            👉 ដូចនេះ <span class="math-style">f</span> ជា <strong>អនុគមន៍សេស</strong>។
+        </div>
+    </div>
+
+
+    <div class="section-title">២. កម្រិតមធ្យម (Rational & Absolute Value) <span class="badge bg-medium">កម្រិត ២</span></div>
+
+    <div class="quiz-card">
+        <div class="question-text">
+            លំហាត់ ២.១៖ សិក្សាភាពគូសេសនៃអនុគមន៍ 
+            <span class="math-style">f(x) = 
+                <span class="fraction">
+                    <span class="num">|x|</span>
+                    <span class="den">x<sup>3</sup> + x</span>
+                </span>
+            </span> លើដែនកំណត់របស់វា។
+        </div>
+        <div class="options-grid">
+            <label class="option-item"><input type="radio" name="q2_1"> អនុគមន៍គូ</label>
+            <label class="option-item"><input type="radio" name="q2_1"> អនុគមន៍សេស</label>
+            <label class="option-item"><input type="radio" name="q2_1"> មិនមែនគូ មិនមែនសេស</label>
+        </div>
+        <button class="action-btn" onclick="toggleSolutionBox(this)">បង្ហាញដំណោះស្រាយ</button>
+        <div class="solution-panel">
+            <strong>📝 ដំណោះស្រាយលម្អិត៖</strong><br>
+            - លក្ខខណ្ឌភាគបែង៖ <span class="math-style">x<sup>3</sup> + x <span class="math-symbol">≠</span> 0 <span class="math-symbol">⇒</span> x(x<sup>2</sup> + 1) <span class="math-symbol">≠</span> 0 <span class="math-symbol">⇒</span> x <span class="math-symbol">≠</span> 0</span><br>
+            - នាំឱ្យដែនកំណត់ <span class="math-style">D = ℝ<sup>*</sup></span> (ឆ្លុះ)<br>
+            - គណនា៖ <span class="math-style">f(-x) = <span class="fraction"><span class="num">|-x|</span><span class="den">(-x)<sup>3</sup>+(-x)</span></span> = <span class="fraction"><span class="num">|x|</span><span class="den">-(x<sup>3</sup>+x)</span></span> = -f(x)</span><br>
+            👉 ដូចនេះ <span class="math-style">f</span> ជា <strong>អនុគមន៍សេស</strong>។
+        </div>
+    </div>
+
+    <div class="quiz-card">
+        <div class="question-text">
+            លំហាត់ ២.២៖ សិក្សាភាពគូសេសនៃអនុគមន៍ 
+            <span class="math-style">f(x) = 
+                <span class="fraction">
+                    <span class="num">x<sup>2</sup> + 2</span>
+                    <span class="den">|x - 3| + |x + 3|</span>
+                </span>
+            </span> លើដែនកំណត់របស់វា។
+        </div>
+        <div class="options-grid">
+            <label class="option-item"><input type="radio" name="q2_2"> អនុគមន៍គូ</label>
+            <label class="option-item"><input type="radio" name="q2_2"> អនុគមន៍សេស</label>
+            <label class="option-item"><input type="radio" name="q2_2"> មិនមែនគូ មិនមែនសេស</label>
+        </div>
+        <button class="action-btn" onclick="toggleSolutionBox(this)">បង្ហាញដំណោះស្រាយ</button>
+        <div class="solution-panel">
+            <strong>📝 ដំណោះស្រាយលម្អិត៖</strong><br>
+            - ភាគបែង <span class="math-style">|x - 3| + |x + 3| <span class="math-symbol">≠</span> 0</span> ជានិច្ច នាំឱ្យ <span class="math-style">D = ℝ</span> (ឆ្លុះ)<br>
+            - គណនា៖ <span class="math-style">f(-x) = 
+                <span class="fraction">
+                    <span class="num">(-x)<sup>2</sup> + 2</span>
+                    <span class="den">|-x - 3| + |-x + 3|</span>
+                </span>
+                =
+                <span class="fraction">
+                    <span class="num">x<sup>2</sup> + 2</span>
+                    <span class="den">|-(x + 3)| + |-(x - 3)|</span>
+                </span>
+                =
+                <span class="fraction">
+                    <span class="num">x<sup>2</sup> + 2</span>
+                    <span class="den">|x + 3| + |x - 3|</span>
+                </span>
+                = f(x)
+            </span> (ដោយសារផលបូកមានលក្ខណៈត្រឡប់)<br>
+            👉 ដូចនេះ <span class="math-style">f</span> ជា <strong>អនុគមន៍គូ</strong>។
+        </div>
+    </div>
+
+
+    <div class="section-title">៣. កម្រិតខ្ពស់ (Irrational & Complex Algebra) <span class="badge bg-hard">កម្រិត ៣</span></div>
+
+    <div class="quiz-card">
+        <div class="question-text">
+            លំហាត់ ៣.១៖ សិក្សាភាពគូសេសនៃអនុគមន៍ 
+            <span class="math-style">f(x) = <span class="sqrt"><span class="sqrt-sym">√</span><span class="sqrt-vin">9 - x<sup>2</sup></span></span></span> លើដែនកំណត់របស់វា។
+        </div>
+        <div class="options-grid">
+            <label class="option-item"><input type="radio" name="q3_1"> អនុគមន៍គូ</label>
+            <label class="option-item"><input type="radio" name="q3_1"> អនុគមន៍សេស</label>
+            <label class="option-item"><input type="radio" name="q3_1"> មិនមែនគូ មិនមែនសេស</label>
+        </div>
+        <button class="action-btn" onclick="toggleSolutionBox(this)">បង្ហាញដំណោះស្រាយ</button>
+        <div class="solution-panel">
+            <strong>📝 ដំណោះស្រាយលម្អិត៖</strong><br>
+            - លក្ខខណ្ឌ៖ <span class="math-style">9 - x<sup>2</sup> <span class="math-symbol">≥</span> 0 <span class="math-symbol">⇒</span> x<sup>2</sup> <span class="math-symbol">≤</span> 9 <span class="math-symbol">⇒</span> x ∈ [-3, 3]</span> នាំឱ្យ <span class="math-style">D = [-3, 3]</span> (ឆ្លុះ)<br>
+            - គណនា៖ <span class="math-style">f(-x) = <span class="sqrt"><span class="sqrt-sym">√</span><span class="sqrt-vin">9 - (-x)<sup>2</sup></span></span> = <span class="sqrt"><span class="sqrt-sym">√</span><span class="sqrt-vin">9 - x<sup>2</sup></span></span> = f(x)</span><br>
+            👉 ដូចនេះ <span class="math-style">f</span> ជា <strong>អនុគមន៍គូ</strong>។
+        </div>
+    </div>
+
+    <div class="quiz-card">
+        <div class="question-text">
+            លំហាត់ ៣.២៖ សិក្សាភាពគូសេសនៃអនុគមន៍ 
+            <span class="math-style">f(x) = <span class="sqrt"><span class="sqrt-sym">√</span><span class="sqrt-vin">x<sup>2</sup> + 1</span></span> - x</span> លើ <span class="math-style">D = ℝ</span>។
+        </div>
+        <div class="options-grid">
+            <label class="option-item"><input type="radio" name="q3_2"> អនុគមន៍គូ</label>
+            <label class="option-item"><input type="radio" name="q3_2"> អនុគមន៍សេស</label>
+            <label class="option-item"><input type="radio" name="q3_2"> មិនមែនគូ មិនមែនសេស</label>
+        </div>
+        <button class="action-btn" onclick="toggleSolutionBox(this)">បង្ហាញដំណោះស្រាយ</button>
+        <div class="solution-panel">
+            <strong>📝 ដំណោះស្រាយលម្អិត៖</strong><br>
+            - ដែនកំណត់ <span class="math-style">D = ℝ</span> (ឆ្លុះ) ព្រោះ <span class="math-style">x<sup>2</sup> + 1 > 0</span> ជានិច្ច<br>
+            - គណនា៖ <span class="math-style">f(-x) = <span class="sqrt"><span class="sqrt-sym">√</span><span class="sqrt-vin">(-x)<sup>2</sup> + 1</span></span> - (-x) = <span class="sqrt"><span class="sqrt-sym">√</span><span class="sqrt-vin">x<sup>2</sup> + 1</span></span> + x</span><br>
+            - គុណនឹងកន្សោមឆ្លាស់ដើម្បីពិនិត្យទម្រង់៖<br>
+            <span class="math-style">f(-x) = 
+                <span class="fraction">
+                    <span class="num">(<span class="sqrt"><span class="sqrt-sym">√</span><span class="sqrt-vin">x<sup>2</sup> + 1</span></span> + x)(<span class="sqrt"><span class="sqrt-sym">√</span><span class="sqrt-vin">x<sup>2</sup> + 1</span></span> - x)</span>
+                    <span class="den"><span class="sqrt"><span class="sqrt-sym">√</span><span class="sqrt-vin">x<sup>2</sup> + 1</span></span> - x</span>
+                </span>
+                = 
+                <span class="fraction">
+                    <span class="num">(x<sup>2</sup> + 1) - x<sup>2</sup></span>
+                    <span class="den"><span class="sqrt"><span class="sqrt-sym">√</span><span class="sqrt-vin">x<sup>2</sup> + 1</span></span> - x</span>
+                </span>
+                = 
+                <span class="fraction">
+                    <span class="num">1</span>
+                    <span class="den">f(x)</span>
+                </span>
+            </span><br>
+            - ម្យ៉ាងទៀត ពិនិត្យផលគុណ៖ <span class="math-style">f(x) &times; f(-x) = 1</span><br>
+            👉 ដោយសារ <span class="math-style">f(-x) <span class="math-symbol">≠</span> f(x)</span> និង <span class="math-style">f(-x) <span class="math-symbol">≠</span> -f(x)</span> ដូចនេះអនុគមន៍នេះ <strong>មិនមែនគូ និងមិនមែនសេសឡើយ</strong>។
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function toggleSolutionBox(btn) {
+        var panel = btn.nextElementSibling;
+        if (panel.style.display === "block") {
+            panel.style.display = "none";
+            btn.textContent = "បង្ហាញដំណោះស្រាយ";
+        } else {
+            panel.style.display = "block";
+            btn.textContent = "លាក់ដំណោះស្រាយ";
+        }
+    }
+</script>
+
+</body>
+</html>
