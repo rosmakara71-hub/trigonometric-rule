@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>កម្រងសំណួរនិងលំហាត់វាស់ស្ទង់សមត្ថភាព</title>
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;700&family=Moul&display=swap');
+        
+        body {
+            font-family: 'Kantumruy Pro', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            color: #1e293b;
+        }
+        .exam-container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px double #1e3a8a;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .kingdom {
+            font-family: 'Moul', sans-serif;
+            font-size: 16px;
+            margin: 0 0 5px 0;
+            color: #1e3a8a;
+        }
+        .exam-title {
+            font-family: 'Moul', sans-serif;
+            font-size: 18px;
+            color: #b91c1c;
+            margin: 20px 0 5px 0;
+            line-height: 1.6;
+        }
+        .author {
+            font-size: 14px;
+            font-weight: bold;
+            color: #334155;
+            margin-top: 5px;
+        }
+        .student-info-box {
+            background-color: #f1f5f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            border: 1px solid #e2e8f0;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .input-group label {
+            font-weight: bold;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: #334155;
+        }
+        .input-group input {
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-family: 'Kantumruy Pro', sans-serif;
+            font-size: 14px;
+            outline: none;
+        }
+        .input-group input:focus {
+            border-color: #1e3a8a;
+        }
+        .sticky-bar {
+            position: sticky;
+            top: 10px;
+            background: #fff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            z-index: 1000;
+            border-left: 6px solid #1e3a8a;
+        }
+        .question-card {
+            display: none;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+        .question-card.active {
+            display: block;
+        }
+        .question-card:hover {
+            border-color: #1e3a8a;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.05);
+        }
+        .question-text {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 18px;
+            color: #0f172a;
+            line-height: 1.8;
+        }
+        .points {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: normal;
+        }
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 10px;
+        }
+        @media (max-width: 650px) {
+            .options-container { grid-template-columns: 1fr; }
+            .student-info-box { grid-template-columns: 1fr; }
+        }
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 15px;
+        }
+        .option-label:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+        .option-label input {
+            margin-right: 12px;
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+        .solution-box {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f0fdf4;
+            border-left: 4px solid #16a34a;
+            border-radius: 6px;
+            font-size: 14.5px;
+            line-height: 1.7;
+            color: #1e293b;
+        }
+        .solution-title {
+            font-weight: bold;
+            color: #16a34a;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        
+        .navigation-box {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            gap: 15px;
+        }
+        .nav-btn {
+            padding: 12px 25px;
+            background: #64748b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Kantumruy Pro', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .nav-btn:hover {
+            background: #475569;
+        }
+        .nav-btn.next-btn {
+            background: #2563eb;
+        }
+        .nav-btn.next-btn:hover {
+            background: #1d4ed8;
+        }
+        
+        .submit-btn {
+            display: none;
+            width: 100%;
+            padding: 16px;
+            background: #1e3a8a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Kantumruy Pro', sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(30, 58, 138, 0.15);
+            transition: background 0.3s;
+        }
+        .submit-btn:hover {
+            background: #1d4ed8;
+        }
+        .result-box {
+            display: none;
+            background: #eff6ff;
+            border: 2px solid #2563eb;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .result-title {
+            font-family: 'Moul', sans-serif;
+            color: #1e3a8a;
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        .grade-badge {
+            display: inline-block;
+            font-size: 36px;
+            font-weight: bold;
+            padding: 5px 30px;
+            border-radius: 12px;
+            margin: 15px 0;
+            font-family: sans-serif;
+        }
+        .grade-A { background-color: #d1fae5; color: #065f46; border: 2px solid #34d399; }
+        .grade-B { background-color: #e0f2fe; color: #075985; border: 2px solid #38bdf8; }
+        .grade-C { background-color: #fef9c3; color: #854d0e; border: 2px solid #facc15; }
+        .grade-D { background-color: #ffedd5; color: #9a3412; border: 2px solid #fb923c; }
+        .grade-E { background-color: #f3e8ff; color: #6b21a8; border: 2px solid #c084fc; }
+        .grade-F { background-color: #fee2e2; color: #991b1b; border: 2px solid #f87171; }
+
+        .correct-flash { background: #d1fae5 !important; border-color: #10b981 !important; }
+        .incorrect-flash { background: #fee2e2 !important; border-color: #ef4444 !important; }
+    </style>
+<a href="index.html" style="padding: 8px 16px; background: #e2e8f0; color: #333; text-decoration: none; border-radius: 5px; font-family: sans-serif;">
+    ⬅ ថយក្រោយ
+</a>
+</head>
+<body>
+
+    <div class="exam-container">
+        <div class="header">
+            <div class="kingdom">ព្រះរាជាណាចក្រកម្ពុជា</div>
+            <div class="kingdom" style="font-size: 13px;">ជាតិ សាសនា ព្រះមហាក្សត្រ</div>
+<div class="exam-title">វិញ្ញាសាវាស់ស្ទង់សមត្ថភាពសិស្ស ( <span id="lesson-id"></span> )</div>
+
+            <div class="author">រៀបរៀង និងផ្ទៀងផ្ទាត់ដោយ៖ លោកគ្រូ រស់ មករា</div>
+        </div>
+
+        <div class="student-info-box" id="infoBox">
+            <div class="input-group">
+                <label for="studentName">នាមត្រកូល និងនាមខ្លួនបេក្ខជន *</label>
+                <input type="text" id="studentName" placeholder="តើអ្នកឈ្មោះអ្វី?" required>
+            </div>
+            <div class="input-group">
+                <label for="studentClass">ថ្នាក់/បន្ទប់សិក្សា *</label>
+                <input type="text" id="studentClass" placeholder="តើអ្នករៀនថ្នាក់ណា?" required>
+            </div>
+        </div>
+
+        <div class="sticky-bar">
+            <div style="font-weight: bold; color: #1e3a8a;" id="progressDisplay">លំហាត់ទី ១/--</div>
+            <div style="font-weight: bold; color: #1e3a8a;">ពិន្ទុរួម៖ <span id="totalPointsDisplay">0</span></div>
+        </div>
+
+        <div class="result-box" id="resultBox">
+            <div class="result-title">លទ្ធផលប្រឡង</div>
+
+            <p id="studentResultName" style="font-weight: bold; font-size: 16px; margin-bottom: 5px;"></p>
+<p style="font-size: 16px; color: #475569; font-weight: bold; margin: 5px 0 15px 0;">
+                ⏱️ ចំណាយពេល៖ <span id="timeSpentDisplay" style="color: #b91c1c;"></span>
+            </p>
+            <p style="font-size: 24px; color: #1e293b; font-weight: bold; margin: 10px 0 5px 0;">ពិន្ទុទទួលបាន៖ <span id="scoreDisplay">0</span> / <span id="maxPointsDisplay">0</span> (<span id="percentDisplay">0</span>%)</p>
+            
+            
+
+            <div><span id="gradeDisplay" class="grade-badge">F</span></div>
+            <p id="gradeComment" style="font-weight: bold; color: #475569; font-size: 15px; margin-bottom: 15px;"></p>
+            
+            <p style="color: #16a34a; font-weight: bold; margin-top: 12px; border-top: 1px dashed #cbd5e1; padding-top: 15px;">👇 សូមពិនិត្យវិធីសាស្ត្រដោះស្រាយលម្អិតនៅខាងក្រោមសំនួរនីមួយៗ!</p>
+        </div>
+
+        <form id="quizForm" onsubmit="submitExam(event)">                    
+            <div id="questionsContainer">                
+                
+<div class="question-card" data-qindex="1">
+    <div class="question-text">
+        <span class="q-number"></span> គណនាតម្លៃដាច់ខាតនៃកន្សោម $\cos(60^\circ - 45^\circ)$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q1" value="W1"> $\frac{\sqrt{6} - \sqrt{2}}{4}$</label>
+        <label class="option-label"><input type="radio" name="q1" value="C" data-correct="true"> $\frac{\sqrt{6} + \sqrt{2}}{4}$</label>
+        <label class="option-label"><input type="radio" name="q1" value="W2"> $\frac{\sqrt{3} + 1}{2}$</label>
+        <label class="option-label"><input type="radio" name="q1" value="W3"> $\frac{\sqrt{2} - \sqrt{6}}{4}$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        តាមរូបមន្ត $\cos(\alpha - \beta) = \cos\alpha \cos\beta + \sin\alpha \sin\beta$<br>
+        - នាំឱ្យ $\cos(60^\circ - 45^\circ) = \cos60^\circ \cos45^\circ + \sin60^\circ \sin45^\circ$<br>
+        - ជំនួសតម្លៃ៖ $\left(\frac{1}{2}\right)\left(\frac{\sqrt{2}}{2}\right) + \left(\frac{\sqrt{3}}{2}\right)\left(\frac{\sqrt{2}}{2}\right) = \frac{\sqrt{2}}{4} + \frac{\sqrt{6}}{4} = \frac{\sqrt{6} + \sqrt{2}}{4}$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="2">
+    <div class="question-text">
+        <span class="q-number"></span> គណនាតម្លៃដាច់ខាតនៃកន្សោម $\cos(45^\circ + 30^\circ)$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q2" value="C" data-correct="true"> $\frac{\sqrt{6} - \sqrt{2}}{4}$</label>
+        <label class="option-label"><input type="radio" name="q2" value="W1"> $\frac{\sqrt{6} + \sqrt{2}}{4}$</label>
+        <label class="option-label"><input type="radio" name="q2" value="W2"> $\frac{\sqrt{3} - 1}{2}$</label>
+        <label class="option-label"><input type="radio" name="q2" value="W3"> $\frac{\sqrt{2} - \sqrt{3}}{4}$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        តាមរូបមន្ត $\cos(\alpha + \beta) = \cos\alpha \cos\beta - \sin\alpha \sin\beta$<br>
+        - នាំឱ្យ $\cos(45^\circ + 30^\circ) = \cos45^\circ \cos30^\circ - \sin45^\circ \sin30^\circ$<br>
+        - ជំនួសតម្លៃ៖ $\left(\frac{\sqrt{2}}{2}\right)\left(\frac{\sqrt{3}}{2}\right) - \left(\frac{\sqrt{2}}{2}\right)\left(\frac{1}{2}\right) = \frac{\sqrt{6}}{4} - \frac{\sqrt{2}}{4} = \frac{\sqrt{6} - \sqrt{2}}{4}$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="3">
+    <div class="question-text">
+        <span class="q-number"></span> គណនាតម្លៃនៃកន្សោម $A = \cos 75^\circ \cos 15^\circ + \sin 75^\circ \sin 15^\circ$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q3" value="W1"> $0$</label>
+        <label class="option-label"><input type="radio" name="q3" value="W2"> $\frac{1}{2}$</label>
+        <label class="option-label"><input type="radio" name="q3" value="C" data-correct="true"> $\frac{\sqrt{3}}{2}$</label>
+        <label class="option-label"><input type="radio" name="q3" value="W3"> $1$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        តាមរូបមន្តព្រលាត $\cos\alpha \cos\beta + \sin\alpha \sin\beta = \cos(\alpha - \beta)$<br>
+        - នាំឱ្យ $A = \cos(75^\circ - 15^\circ) = \cos 60^\circ$<br>
+        - ដូចនេះ $A = \frac{\sqrt{3}}{2}$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="4">
+    <div class="question-text">
+        <span class="q-number"></span> គណនាតម្លៃនៃកន្សោម $B = \cos\frac{5\pi}{12} \cos\frac{\pi}{12} - \sin\frac{5\pi}{12} \sin\frac{\pi}{12}$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q4" value="C" data-correct="true"> $0$</label>
+        <label class="option-label"><input type="radio" name="q4" value="W1"> $\frac{1}{2}$</label>
+        <label class="option-label"><input type="radio" name="q4" value="W2"> $\frac{\sqrt{3}}{2}$</label>
+        <label class="option-label"><input type="radio" name="q4" value="W3"> $1$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        តាមរូបមន្តព្រលាត $\cos\alpha \cos\beta - \sin\alpha \sin\beta = \cos(\alpha + \beta)$<br>
+        - នាំឱ្យ $B = \cos\left(\frac{5\pi}{12} + \frac{\pi}{12}\right) = \cos\left(\frac{6\pi}{12}\right) = \cos\left(\frac{\pi}{2}\right)$<br>
+        - ដូចនេះ $B = 0$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="5">
+    <div class="question-text">
+        <span class="q-number"></span> សម្រួលកន្សោម $y = \cos(x - \frac{\pi}{6}) - \cos(x + \frac{\pi}{6})$ ឱ្យទៅជាទម្រង់សាមញ្ញ។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q5" value="W1"> $\sqrt{3}\cos x$</label>
+        <label class="option-label"><input type="radio" name="q5" value="C" data-correct="true"> $\sin x$</label>
+        <label class="option-label"><input type="radio" name="q5" value="W2"> $\sqrt{3}\sin x$</label>
+        <label class="option-label"><input type="radio" name="q5" value="W3"> $\cos x$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        ព្រលាតតាមរូបមន្តផលបូក និងផលដក៖<br>
+        - $\cos(x - \frac{\pi}{6}) = \cos x \cos\frac{\pi}{6} + \sin x \sin\frac{\pi}{6}$<br>
+        - $\cos(x + \frac{\pi}{6}) = \cos x \cos\frac{\pi}{6} - \sin x \sin\frac{\pi}{6}$<br>
+        - ធ្វើផលដក៖ $y = 2 \sin x \sin\frac{\pi}{6} = 2 \sin x \left(\frac{1}{2}\right) = \sin x$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="6">
+    <div class="question-text">
+        <span class="q-number"></span> គណនាតម្លៃនៃកន្សោម $C = \cos 105^\circ + \cos 15^\circ$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q6" value="W1"> $\frac{\sqrt{6}}{2}$</label>
+        <label class="option-label"><input type="radio" name="q6" value="C" data-correct="true"> $\frac{\sqrt{2}}{2}$</label>
+        <label class="option-label"><input type="radio" name="q6" value="W2"> $0$</label>
+        <label class="option-label"><input type="radio" name="q6" value="W3"> $\sqrt{2}$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        ដឹងថា $\cos 105^\circ = \cos(60^\circ + 45^\circ) = \frac{\sqrt{2}-\sqrt{6}}{4}$<br>
+        និង $\cos 15^\circ = \cos(45^\circ - 30^\circ) = \frac{\sqrt{6}+\sqrt{2}}{4}$<br>
+        - នាំឱ្យ $C = \frac{\sqrt{2}-\sqrt{6}}{4} + \frac{\sqrt{6}+\sqrt{2}}{4} = \frac{2\sqrt{2}}{4} = \frac{\sqrt{2}}{2}$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="7">
+    <div class="question-text">
+        <span class="q-number"></span> តើកន្សោម $\cos\alpha \cos\beta - \sin\alpha \sin\beta$ ស្មើនឹងរូបមន្តមួយណាខាងក្រោម?
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q7" value="W1"> $\cos(\alpha - \beta)$</label>
+        <label class="option-label"><input type="radio" name="q7" value="C" data-correct="true"> $\cos(\alpha + \beta)$</label>
+        <label class="option-label"><input type="radio" name="q7" value="W2"> $\sin(\alpha + \beta)$</label>
+        <label class="option-label"><input type="radio" name="q7" value="W3"> $\sin(\alpha - \beta)$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        នេះជាទម្រង់ស្តង់ដារនៃរូបមន្តផលបូកសម្រាប់អនុគមន៍កូស៊ីនុស៖ $\cos(\alpha + \beta) = \cos\alpha \cos\beta - \sin\alpha \sin\beta$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="8">
+    <div class="question-text">
+        <span class="q-number"></span> គណនាតម្លៃនៃ $\cos\left(\frac{\pi}{3} + \frac{\pi}{4}\right)$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q8" value="W1"> $\frac{\sqrt{6} + \sqrt{2}}{4}$</label>
+        <label class="option-label"><input type="radio" name="q8" value="C" data-correct="true"> $\frac{\sqrt{2} - \sqrt{6}}{4}$</label>
+        <label class="option-label"><input type="radio" name="q8" value="W2"> $\frac{\sqrt{6} - \sqrt{2}}{4}$</label>
+        <label class="option-label"><input type="radio" name="q8" value="W3"> $-\frac{\sqrt{6} + \sqrt{2}}{4}$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        $\cos\left(\frac{\pi}{3} + \frac{\pi}{4}\right) = \cos\frac{\pi}{3}\cos\frac{\pi}{4} - \sin\frac{\pi}{3}\sin\frac{\pi}{4}$<br>
+        $= \left(\frac{1}{2}\right)\left(\frac{\sqrt{2}}{2}\right) - \left(\frac{\sqrt{3}}{2}\right)\left(\frac{\sqrt{2}}{2}\right) = \frac{\sqrt{2} - \sqrt{6}}{4}$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="9">
+    <div class="question-text">
+        <span class="q-number"></span> សាមញ្ញកម្មកន្សោម $P = \cos(2\theta) \cos\theta + \sin(2\theta) \sin\theta$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q9" value="W1"> $\cos 3\theta$</label>
+        <label class="option-label"><input type="radio" name="q9" value="C" data-correct="true"> $\cos\theta$</label>
+        <label class="option-label"><input type="radio" name="q9" value="W2"> $\sin\theta$</label>
+        <label class="option-label"><input type="radio" name="q9" value="W3"> $\sin 3\theta$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        ប្រើរូបមន្តផលដក $\cos(\alpha - \beta) = \cos\alpha \cos\beta + \sin\alpha \sin\beta$<br>
+        យក $\alpha = 2\theta$ និង $\beta = \theta$ នាំឱ្យ $P = \cos(2\theta - \theta) = \cos\theta$។
+    </div>
+</div>
+
+
+<div class="question-card" data-qindex="10">
+    <div class="question-text">
+        <span class="q-number"></span> គេឱ្យ $\sin\alpha = \frac{3}{5}$ ដែល $\frac{\pi}{2} < \alpha < \pi$ និង $\cos\beta = \frac{5}{13}$ ដែល $0 < \beta < \frac{\pi}{2}$។ គណនា $\cos(\alpha - \beta)$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q10" value="W1"> $\frac{63}{65}$</label>
+        <label class="option-label"><input type="radio" name="q10" value="W2"> $-\frac{56}{65}$</label>
+        <label class="option-label"><input type="radio" name="q10" value="C" data-correct="true"> $-\frac{16}{65}$</label>
+        <label class="option-label"><input type="radio" name="q10" value="W3"> $\frac{16}{65}$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - រក $\cos\alpha$៖ ដោយ $\alpha$ នៅកាដ្រង់ទី២ នោះ $\cos\alpha < 0 \implies \cos\alpha = -\sqrt{1 - \sin^2\alpha} = -\frac{4}{5}$<br>
+        - រក $\sin\beta$៖ ដោយ $\beta$ នៅកាដ្រង់ទី១ នោះ $\sin\beta > 0 \implies \sin\beta = \sqrt{1 - \cos^2\beta} = \frac{12}{13}$<br>
+        - គណនា $\cos(\alpha - \beta) = \cos\alpha \cos\beta + \sin\alpha \sin\beta = \left(-\frac{4}{5}\right)\left(\frac{5}{13}\right) + \left(\frac{3}{5}\right)\left(\frac{12}{13}\right) = \frac{-20 + 36}{65} = \frac{16}{65}$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="11">
+    <div class="question-text">
+        <span class="q-number"></span> ផ្អែកលើបម្រាប់លំហាត់ទី១០ ( $\sin\alpha = \frac{3}{5}$ កាដ្រង់ទី២ និង $\cos\beta = \frac{5}{13}$ កាដ្រង់ទី១ ) ចូរគណនា $\cos(\alpha + \beta)$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q11" value="C" data-correct="true"> $-\frac{56}{65}$</label>
+        <label class="option-label"><input type="radio" name="q11" value="W1"> $-\frac{16}{65}$</label>
+        <label class="option-label"><input type="radio" name="q11" value="W2"> $\frac{56}{65}$</label>
+        <label class="option-label"><input type="radio" name="q11" value="W3"> $-\frac{20}{65}$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        ពីលំហាត់មុនយើងបាន $\cos\alpha = -\frac{4}{5}$ និង $\sin\beta = \frac{12}{13}$<br>
+        - តាមរូបមន្ត៖ $\cos(\alpha + \beta) = \cos\alpha \cos\beta - \sin\alpha \sin\beta$<br>
+        - ជំនួសតម្លៃ៖ $\left(-\frac{4}{5}\right)\left(\frac{5}{13}\right) - \left(\frac{3}{5}\right)\left(\frac{12}{13}\right) = \frac{-20 - 36}{65} = -\frac{56}{65}$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="12">
+    <div class="question-text">
+        <span class="q-number"></span> គេឱ្យ $\cos\alpha = -\frac{12}{13}$ និង $\sin\beta = -\frac{4}{5}$ ដោយមុំ $\alpha, \beta$ ស្ថិតក្នុងកាដ្រង់ទី៣ ($180^\circ < \alpha, \beta < 270^\circ$)។ គណនា $\cos(\alpha - \beta)$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q12" value="W1"> $-\frac{33}{65}$</label>
+        <label class="option-label"><input type="radio" name="q12" value="C" data-correct="true"> $\frac{56}{65}$</label>
+        <label class="option-label"><input type="radio" name="q12" value="W2"> $\frac{16}{65}$</label>
+        <label class="option-label"><input type="radio" name="q12" value="W3"> $-\frac{56}{65}$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - ក្នុងកាដ្រង់ទី៣ អនុគមន៍ $\sin$ និង $\cos$ សុទ្ធតែអវិជ្ជមាន<br>
+        - នាំឱ្យ $\sin\alpha = -\sqrt{1 - (-\frac{12}{13})^2} = -\frac{5}{13}$<br>
+        - នាំឱ្យ $\cos\beta = -\sqrt{1 - (-\frac{4}{5})^2} = -\frac{3}{5}$<br>
+        - គណនា $\cos(\alpha - \beta) = \cos\alpha \cos\beta + \sin\alpha \sin\beta = (-\frac{12}{13})(-\frac{3}{5}) + (-\frac{5}{13})(-\frac{4}{5}) = \frac{36 + 20}{65} = \frac{56}{65}$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="13">
+    <div class="question-text">
+        <span class="q-number"></span> ផ្អែកលើបម្រាប់លំហាត់ទី១២ ចូរគណនា قيمة $\cos(\alpha + \beta)$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q13" value="W1"> $\frac{56}{65}$</label>
+        <label class="option-label"><input type="radio" name="q13" value="W2"> $\frac{16}{65}$</label>
+        <label class="option-label"><input type="radio" name="q13" value="C" data-correct="true"> $\frac{16}{65}$</label>
+        <label class="option-label"><input type="radio" name="q13" value="W3"> $-\frac{16}{65}$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        ប្រើតម្លៃដដែល៖ $\cos\alpha = -\frac{12}{13}, \sin\alpha = -\frac{5}{13}, \cos\beta = -\frac{3}{5}, \sin\beta = -\frac{4}{5}$<br>
+        - $\cos(\alpha + \beta) = \cos\alpha \cos\beta - \sin\alpha \sin\beta$<br>
+        - $= (-\frac{12}{13})(-\frac{3}{5}) - (-\frac{5}{13})(-\frac{4}{5}) = \frac{36 - 20}{65} = \frac{16}{65}$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="14">
+    <div class="question-text">
+        <span class="q-number"></span> គេឱ្យ $\tan\alpha = \frac{3}{4}$ និង $\tan\beta = \frac{5}{12}$ ដែល $\alpha, \beta$ ជាមុំស្រួចក្នុងកាដ្រង់ទី១។ គណនាតម្លៃ $\cos(\alpha + \beta)$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q14" value="C" data-correct="true"> $\frac{33}{65}$</label>
+        <label class="option-label"><input type="radio" name="q14" value="W1"> $\frac{63}{65}$</label>
+        <label class="option-label"><input type="radio" name="q14" value="W2"> $\frac{16}{65}$</label>
+        <label class="option-label"><input type="radio" name="q14" value="W3"> $\frac{56}{65}$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - តាមតេត្រាជ្រុងកែង គេទាញបាន៖ $\sin\alpha = \frac{3}{5}, \cos\alpha = \frac{4}{5}$ និង $\sin\beta = \frac{5}{13}, \cos\beta = \frac{12}{13}$<br>
+        - គណនា $\cos(\alpha + \beta) = \cos\alpha \cos\beta - \sin\alpha \sin\beta = \left(\frac{4}{5}\right)\left(\frac{12}{13}\right) - \left(\frac{3}{5}\right)\left(\frac{5}{13}\right)$<br>
+        - $= \frac{48 - 15}{65} = \frac{33}{65}$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="15">
+    <div class="question-text">
+        <span class="q-number"></span> ប្រសិនបើ $\cos x = \frac{1}{3}$ ចូរគណនាតម្លៃនៃ $\cos(x - \pi)$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q15" value="W1"> $\frac{1}{3}$</label>
+        <label class="option-label"><input type="radio" name="q15" value="C" data-correct="true"> $-\frac{1}{3}$</label>
+        <label class="option-label"><input type="radio" name="q15" value="W2"> $\frac{2\sqrt{2}}{3}$</label>
+        <label class="option-label"><input type="radio" name="q15" value="W3"> $-\frac{2\sqrt{2}}{3}$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - តាមរូបមន្ត៖ $\cos(x - \pi) = \cos x \cos\pi + \sin x \sin\pi$<br>
+        - ដោយដឹងថា $\cos\pi = -1$ និង $\sin\pi = 0$<br>
+        - នាំឱ្យ $\cos(x - \pi) = \cos x (-1) + 0 = -\cos x = -\frac{1}{3}$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="16">
+    <div class="question-text">
+        <span class="q-number"></span> គណនាតម្លៃ $\cos 15^\circ$ ដោយប្រើរូបមន្តផលដក។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q16" value="W1"> $\frac{\sqrt{6} - \sqrt{2}}{4}$</label>
+        <label class="option-label"><input type="radio" name="q16" value="C" data-correct="true"> $\frac{\sqrt{6} + \sqrt{2}}{4}$</label>
+        <label class="option-label"><input type="radio" name="q16" value="W2"> $\frac{\sqrt{3}+1}{2}$</label>
+        <label class="option-label"><input type="radio" name="q16" value="W3"> $\frac{\sqrt{2}-\sqrt{6}}{4}$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        $\cos 15^\circ = \cos(45^\circ - 30^\circ) = \cos 45^\circ \cos 30^\circ + \sin 45^\circ \sin 30^\circ$<br>
+        $= \left(\frac{\sqrt{2}}{2}\right)\left(\frac{\sqrt{3}}{2}\right) + \left(\frac{\sqrt{2}}{2}\right)\left(\frac{1}{2}\right) = \frac{\sqrt{6} + \sqrt{2}}{4}$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="17">
+    <div class="question-text">
+        <span class="q-number"></span> បើ $\cos(A + B) = 0$ និង $\sin A \sin B = \frac{1}{2}$ តើតម្លៃ $\cos A \cos B$ ស្មើនឹងប៉ុន្មាន?
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q17" value="W1"> $-\frac{1}{2}$</label>
+        <label class="option-label"><input type="radio" name="q17" value="W2"> $0$</label>
+        <label class="option-label"><input type="radio" name="q17" value="C" data-correct="true"> $\frac{1}{2}$</label>
+        <label class="option-label"><input type="radio" name="q17" value="W3"> $1$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        តាមរូបមន្ត៖ $\cos(A + B) = \cos A \cos B - \sin A \sin B$<br>
+        - ជំនួសបម្រាប់ចូល៖ $0 = \cos A \cos B - \frac{1}{2}$<br>
+        - ដូចនេះ $\cos A \cos B = \frac{1}{2}$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="18">
+    <div class="question-text">
+        <span class="q-number"></span> គណនាតម្លៃនៃកន្សោម $\cos 80^\circ \cos 20^\circ + \sin 80^\circ \sin 20^\circ$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q18" value="W1"> $\frac{1}{2}$</label>
+        <label class="option-label"><input type="radio" name="q18" value="C" data-correct="true"> $\frac{1}{2}$</label> 
+        <label class="option-label"><input type="radio" name="q18" value="W2"> $\frac{\sqrt{3}}{2}$</label>
+        <label class="option-label"><input type="radio" name="q18" value="W3"> $\frac{\sqrt{2}}{2}$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        កន្សោមត្រូវនឹងទម្រង់ $\cos(\alpha - \beta)$<br>
+        - នាំឱ្យស្មើនឹង $\cos(80^\circ - 20^\circ) = \cos 60^\circ = \frac{1}{2}$។
+    </div>
+</div>
+
+
+<div class="question-card" data-qindex="19">
+    <div class="question-text">
+        <span class="q-number"></span> សម្រួលកន្សោម $M = \frac{\cos(\alpha - \beta) - \cos(\alpha + \beta)}{2}$។ តើវាស្មើនឹងកន្សោមណាខ្លះ?
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q19" value="W1"> $\cos\alpha \cos\beta$</label>
+        <label class="option-label"><input type="radio" name="q19" value="C" data-correct="true"> $\sin\alpha \sin\beta$</label>
+        <label class="option-label"><input type="radio" name="q19" value="W2"> $-\sin\alpha \sin\beta$</label>
+        <label class="option-label"><input type="radio" name="q19" value="W3"> $0$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - $\cos(\alpha - \beta) = \cos\alpha \cos\beta + \sin\alpha \sin\beta$<br>
+        - $\cos(\alpha + \beta) = \cos\alpha \cos\beta - \sin\alpha \sin\beta$<br>
+        - ធ្វើផលដក៖ $\cos(\alpha - \beta) - \cos(\alpha + \beta) = 2 \sin\alpha \sin\beta$<br>
+        - ចែកនឹង ២ នាំឱ្យ $M = \sin\alpha \sin\beta$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="20">
+    <div class="question-text">
+        <span class="q-number"></span> ក្នុងត្រីកោណ $ABC$ មួយ កន្សោម $\cos A \cos B - \sin A \sin B$ ស្មើនឹងតម្លៃមួយណា?
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q20" value="W1"> $\cos C$</label>
+        <label class="option-label"><input type="radio" name="q20" value="C" data-correct="true"> $-\cos C$</label>
+        <label class="option-label"><input type="radio" name="q20" value="W2"> $\sin C$</label>
+        <label class="option-label"><input type="radio" name="q20" value="W3"> $-\sin C$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        - តាមរូបមន្ត៖ $\cos A \cos B - \sin A \sin B = \cos(A + B)$<br>
+        - ក្នុងត្រីកោណ $ABC$ យើងមាន $A + B + C = \pi \implies A + B = \pi - C$<br>
+        - នាំឱ្យ $\cos(A + B) = \cos(\pi - C) = -\cos C$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="21">
+    <div class="question-text">
+        <span class="q-number"></span> ប្រសិនបើ $\alpha + \beta = \frac{\pi}{4}$ គណនាតម្លៃនៃ $(1 + \tan\alpha)(1 + \tan\beta)$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q21" value="W1"> $1$</label>
+        <label class="option-label"><input type="radio" name="q21" value="C" data-correct="true"> $2$</label>
+        <label class="option-label"><input type="radio" name="q21" value="W2"> $\sqrt{2}$</label>
+        <label class="option-label"><input type="radio" name="q21" value="W3"> $4$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        តាមរូបមន្ត $\tan(\alpha + \beta) = \frac{\tan\alpha + \tan\beta}{1 - \tan\alpha\tan\beta} = \tan\frac{\pi}{4} = 1$<br>
+        $\implies \tan\alpha + \tan\beta = 1 - \tan\alpha\tan\beta \implies \tan\alpha + \tan\beta + \tan\alpha\tan\beta = 1$<br>
+        - ព្រលាតកន្សោមសួរ៖ $(1 + \tan\alpha)(1 + \tan\beta) = 1 + \tan\alpha + \tan\beta + \tan\alpha\tan\beta = 1 + 1 = 2$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="22">
+    <div class="question-text">
+        <span class="q-number"></span> សាមញ្ញកម្មកន្សោម $\frac{\cos(\alpha - \beta)}{\cos(\alpha + \beta)}$ នៅពេលដែល $\tan\alpha \tan\beta = \frac{1}{3}$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q22" value="W1"> $1$</label>
+        <label class="option-label"><input type="radio" name="q22" value="W2"> $3$</label>
+        <label class="option-label"><input type="radio" name="q22" value="C" data-correct="true"> $2$</label>
+        <label class="option-label"><input type="radio" name="q22" value="W3"> $\frac{1}{2}$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        ចែកភាគយកនិងភាគបែងនឹង $\cos\alpha \cos\beta$ គេបាន៖<br>
+        $\frac{\cos(\alpha-\beta)}{\cos(\alpha+\beta)} = \frac{1 + \tan\alpha\tan\beta}{1 - \tan\alpha\tan\beta}$<br>
+        - ជំនួសតម្លៃ $\tan\alpha\tan\beta = \frac{1}{3}$ ចូល៖ $\frac{1 + 1/3}{1 - 1/3} = \frac{4/3}{2/3} = 2$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="23">
+    <div class="question-text">
+        <span class="q-number"></span> គណនាតម្លៃផលគុណ $K = \cos 20^\circ \cos 40^\circ \cos 80^\circ$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q23" value="W1"> $\frac{1}{4}$</label>
+        <label class="option-label"><input type="radio" name="q23" value="W2"> $\frac{1}{2}$</label>
+        <label class="option-label"><input type="radio" name="q23" value="W3"> $\frac{\sqrt{3}}{8}$</label>
+        <label class="option-label"><input type="radio" name="q23" value="C" data-correct="true"> $\frac{1}{8}$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        គុណនិងចែកនឹង $2\sin 20^\circ$៖<br>
+        $K = \frac{2\sin 20^\circ \cos 20^\circ \cos 40^\circ \cos 80^\circ}{2\sin 20^\circ} = \frac{\sin 40^\circ \cos 40^\circ \cos 80^\circ}{2\sin 20^\circ}$<br>
+        $= \frac{\sin 80^\circ \cos 80^\circ}{4\sin 20^\circ} = \frac{\sin 160^\circ}{8\sin 20^\circ}$<br>
+        ដោយសារ $\sin 160^\circ = \sin(180^\circ - 20^\circ) = \sin 20^\circ \implies K = \frac{1}{8}$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="24">
+    <div class="question-text">
+        <span class="q-number"></span> រកតម្លៃដាច់ខាតនៃ $x$ បើដឹងថា $\cos(x + 30^\circ) = \sin x$ សម្រាប់ $0^\circ < x < 90^\circ$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q24" value="C" data-correct="true"> $30^\circ$</label>
+        <label class="option-label"><input type="radio" name="q24" value="W1"> $45^\circ$</label>
+        <label class="option-label"><input type="radio" name="q24" value="W2"> $60^\circ$</label>
+        <label class="option-label"><input type="radio" name="q24" value="W3"> $15^\circ$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        បំលែង $\sin x = \cos(90^\circ - x)$<br>
+        - នាំឱ្យសមីការទៅជា៖ $\cos(x + 30^\circ) = \cos(90^\circ - x)$<br>
+        - គេបាន $x + 30^\circ = 90^\circ - x \implies 2x = 60^\circ \implies x = 30^\circ$។
+    </div>
+</div>
+
+<div class="question-card" data-qindex="25">
+    <div class="question-text">
+        <span class="q-number"></span> ប្រសិនបើ $A + B + C = \pi$ ចូរសម្រួលកន្សោម $S = \cos(A+B) + \cos C$។
+        <span class="points">(៥ ពិន្ទុ)</span>
+    </div>
+    <div class="options-container">
+        <label class="option-label"><input type="radio" name="q25" value="W1"> $2\cos C$</label>
+        <label class="option-label"><input type="radio" name="q25" value="W2"> $-2\cos C$</label>
+        <label class="option-label"><input type="radio" name="q25" value="C" data-correct="true"> $0$</label>
+        <label class="option-label"><input type="radio" name="q25" value="W3"> $1$</label>
+    </div>
+    <div class="solution-box">
+        <div class="solution-title">💡 ដំណោះស្រាយលម្អិត៖</div>
+        ដោយសារ $A + B = \pi - C$<br>
+        - នាំឱ្យ $\cos(A + B) = \cos(\pi - C) = -\cos C$<br>
+        - ដូចនេះ $S = -\cos C + \cos C = 0$។
+    </div>
+</div>
+
+                </div>
+
+            <div class="navigation-box" id="navBox">
+                <button type="button" class="nav-btn" id="prevBtn" onclick="changeQuestion(-1)" disabled>⏮ ថយក្រោយ</button>
+                <button type="button" class="nav-btn next-btn" id="nextBtn" onclick="changeQuestion(1)">បន្ទាប់ ⏭</button>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">ផ្ញើចម្លើយ</button>
+        </form>
+    </div>
+
+    <script>
+        let currentQuestionIndex = 0; 
+        let shuffledCards = [];
+        let totalExamPoints = 0;
+        
+        // 🌟 ចាប់ផ្តើមកត់ត្រាម៉ោងភ្លាមៗនៅពេលសិស្សបើកទំព័រវិញ្ញាសា
+        let startTime = new Date(); 
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function initQuiz() {
+            const container = document.getElementById('questionsContainer');
+            const cards = Array.from(container.getElementsByClassName('question-card'));
+            
+            totalExamPoints = cards.length * 5;
+            document.getElementById('totalPointsDisplay').innerText = totalExamPoints;
+
+            cards.forEach(card => {
+                const optionsContainer = card.querySelector('.options-container');
+                if (optionsContainer) {
+                    const options = Array.from(optionsContainer.getElementsByClassName('option-label'));
+                    shuffleArray(options);
+                    options.forEach(opt => optionsContainer.appendChild(opt));
+                }
+            });
+
+            shuffleArray(cards);
+            container.innerHTML = '';
+            cards.forEach(card => container.appendChild(card));
+
+            shuffledCards = cards;
+            shuffledCards[0].classList.add('active');
+            
+            updateNavigation();
+        }
+
+        function updateNavigation() {
+            const total = shuffledCards.length;
+            document.getElementById('progressDisplay').innerText = `លំហាត់ទី ${currentQuestionIndex + 1}/${total}`;
+
+            if (currentQuestionIndex === 0) {
+                document.getElementById('prevBtn').disabled = true;
+            } else {
+                document.getElementById('prevBtn').disabled = false;
+            }
+
+            if (currentQuestionIndex === total - 1) {
+                document.getElementById('nextBtn').style.display = 'none';
+                document.getElementById('submitBtn').style.display = 'block';
+            } else {
+                document.getElementById('nextBtn').style.display = 'block';
+                document.getElementById('submitBtn').style.display = 'none';
+            }
+        }
+
+        function changeQuestion(direction) {
+            shuffledCards[currentQuestionIndex].classList.remove('active');
+            currentQuestionIndex += direction;
+            shuffledCards[currentQuestionIndex].classList.add('active');
+            updateNavigation();
+        }
+
+        function calculateGradeFromPercentage(percentage) {
+            let grade = 'F'; let comment = ''; let cssClass = 'grade-F';
+            if (percentage >= 90) { grade = 'A'; comment = '🎉 ល្អប្រសើរណាស់! លោកគ្រូសរសើរ។ អ្នកពិតជាមានសមត្ថភាពខ្ពស់ និងយល់ច្បាស់ពីមេរៀន។ សូមបន្តការខិតខំនេះ!'; cssClass = 'grade-A'; }
+            else if (percentage >= 80) { grade = 'B'; comment = '✨ ល្អណាស់! លទ្ធផលគួរឱ្យមោទនៈ។ បន្ថែមការប្រុងប្រយ័ត្នបន្តិចទៀត អ្នកនឹងបាននិទ្ទេស A ជាក់ជាមិនខាន។'; cssClass = 'grade-B'; }
+            else if (percentage >= 70) { grade = 'C'; comment = '👍 ល្អបង្គួរ! លទ្ធផលល្អ។ ព្យាយាមរំលឹកមេរៀនបន្ថែមលើចំណុចដែលខ្វះខាតដើម្បីពង្រឹងសមត្ថភាព។'; cssClass = 'grade-C'; }
+            else if (percentage >= 60) { grade = 'D'; comment = '👌 កម្រិតមធ្យម! អ្នកបានឆ្លងផុតការវាយតម្លៃ ប៉ុន្តែត្រូវបង្កើនការធ្វើលំហាត់បន្ថែមទៀត។'; cssClass = 'grade-D'; }
+            else if (percentage >= 50) { grade = 'E'; comment = '⚠️ កម្រិតខ្សោយ! ជិតជាប់ហើយ។ សូមខិតខំប្រឹងប្រែងបន្ថែម និងសួរលោកគ្រូត្រង់ចំណុចមិនច្បាស់។'; cssClass = 'grade-E'; }
+            else { grade = 'F'; comment = '❌ មិនទាន់ជាប់ទេ! កុំបាក់ទឹកចិត្តអី។ ពិនិត្យមើលដំណោះស្រាយលម្អិត ហើយព្យាយាមធ្វើឡើងវិញម្តងទៀតណា!'; cssClass = 'grade-F'; }
+            return { grade, comment, cssClass };
+        }
+
+        function submitExam(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('studentName').value.trim();
+            const sClass = document.getElementById('studentClass').value.trim();
+            
+            if (!name || !sClass) {
+                alert('សូមបំពេញឈ្មោះ និងថ្នាក់សិក្សាជាមុនសិន!');
+                shuffledCards[currentQuestionIndex].classList.remove('active');
+                currentQuestionIndex = 0;
+                shuffledCards[currentQuestionIndex].classList.add('active');
+                updateNavigation();
+                return;
+            }
+
+            // 🌟 គណនារយៈពេលដែលសិស្សបានប្រើប្រាស់
+            let endTime = new Date();
+            let timeDiff = endTime - startTime; // គិតជាមីលីវិនាទី
+            timeDiff /= 1000; // ប្តូរទៅជាវិនាទី
+            
+            let seconds = Math.floor(timeDiff % 60);
+            let minutes = Math.floor(timeDiff / 60);
+            
+            let timeString = "";
+            if (minutes > 0) {
+                timeString += `${minutes} នាទី `;
+            }
+            timeString += `${seconds} វិនាទី`;
+            
+            // បង្ហាញរយៈពេលទៅលើ Result Box
+            document.getElementById('timeSpentDisplay').innerText = timeString;
+
+            let score = 0;
+            shuffledCards.forEach((card) => {
+                const radioInput = card.querySelector('input[type="radio"]');
+                if (radioInput) {
+                    const qName = radioInput.name;
+                    const checkedOption = card.querySelector(`input[name="${qName}"]:checked`);
+                    const solutionBox = card.querySelector('.solution-box');
+                    
+                    card.classList.add('active');
+                    if (solutionBox) solutionBox.style.display = 'block';
+
+                    if (checkedOption && checkedOption.getAttribute('data-correct') === 'true') {
+                        score += 5;
+                        card.classList.add('correct-flash');
+                    } else {
+                        card.classList.add('incorrect-flash');
+                    }
+                }
+            });
+
+            document.getElementById('navBox').style.display = 'none';
+            document.getElementById('submitBtn').style.display = 'none';
+            document.getElementById('infoBox').style.display = 'none';
+
+            const finalPercentage = Math.round((score / totalExamPoints) * 100);
+            const evaluation = calculateGradeFromPercentage(finalPercentage);
+
+            document.getElementById('studentResultName').innerText = `បេក្ខជន៖ ${name} | ថ្នាក់/បន្ទប់៖ ${sClass}`;
+            document.getElementById('scoreDisplay').innerText = score;
+            document.getElementById('maxPointsDisplay').innerText = totalExamPoints;
+            document.getElementById('percentDisplay').innerText = finalPercentage;
+            
+            const gradeBadge = document.getElementById('gradeDisplay');
+            gradeBadge.innerText = `និទ្ទេស៖ ${evaluation.grade}`;
+            gradeBadge.className = `grade-badge ${evaluation.cssClass}`;
+            
+            document.getElementById('gradeComment').innerText = evaluation.comment;
+            document.getElementById('resultBox').style.display = 'block';
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        window.onload = initQuiz;
+    </script>
+
+<script>
+    // ១. ទាញយកឈ្មោះ File ឱ្យបានច្បាស់លាស់ ទោះបើកពី Local ព្រលែងក៏ដោយ
+    let fullPath = window.location.pathname;
+    let fileName = fullPath.substring(fullPath.lastIndexOf('/') + 1);
+    
+    // បន្ថែមការការពារ៖ បើបើកលើ Windows ពេលខ្លះវាប្រើសញ្ញា \ ជំនួសឱ្យ /
+    if (fileName.includes('\\')) {
+        fileName = fileName.substring(fileName.lastIndexOf('\\') + 1);
+    }
+
+    // ២. កាត់យកតែលេខចេញពីឈ្មោះ File (ដក ".html" ចេញ)
+    let lessonNumber = fileName.replace(".html", "");
+
+    // ៣. ដាក់លក្ខខណ្ឌបង្ហាញ៖ បើទាញបានលេខ ឱ្យបង្ហាញលេខ បើទទេឱ្យបង្ហាញសញ្ញាសួរ ?
+    if (lessonNumber !== "" && !isNaN(lessonNumber)) {
+        document.getElementById("lesson-id").innerText = lessonNumber;
+    } else {
+        document.getElementById("lesson-id").innerText = "1"; // លំនាំដើម
+    }
+</script>
+</body>
+</html>
